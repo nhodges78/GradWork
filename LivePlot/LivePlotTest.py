@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import csv
 import os
 import keyboard as key
-import time
 
 timeStep=0.1 #match arduino delay ms
 testTime=5 #how many seconds to run the experiment
