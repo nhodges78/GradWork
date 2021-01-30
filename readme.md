@@ -5,4 +5,4 @@ This repo contains code I have developed or am currently developing for work on 
 ## Repo Contents
 
 * LivePlot
-** Python program for retrieving and plotting sensor data from an Arduino board in real time
+	* Python program for retrieving and plotting sensor data from an Arduino board in real time
