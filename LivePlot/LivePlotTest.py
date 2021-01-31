@@ -54,7 +54,6 @@ while True: #quit when q key is pressed
     plt.plot(times,voltage,'m-')
 
     if key.is_pressed('q'): #stopkey pressed, exit loop
-        #time.sleep(0.5)
         plt.clf()
         plt.close()
         break
