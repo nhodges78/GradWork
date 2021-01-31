@@ -56,7 +56,7 @@ When the stop key "q" is pressed on the user's keyboard, plotting stops and the 
 	- When the stop key is pressed and the `while` loop exits, the communication port is closed and the values of `times` and `voltage` are appended to the end of `tHist` and `vHist`, respectively.
 	
 6. Create a CSV file and save time, voltage data
-	- `fileIndex` is initialized to `1`, used to interate the name of successive files if the current file (ex output1) exists in the directory already. `newFileName` is created as `testOutput[FILEINDEX}.csv`. If `newFileName`
+	- `fileIndex` is initialized to `1`, used to interate the name of successive files if the current file (ex output1) exists in the directory already. `newFileName` is created as `testOutput[FILEINDEX].csv`. If `newFileName`
 	matches a file in the current working directory (i.e. the file already exists), `fileIndex` is incremented by 1 and the file is renamed using it. The cycle repeats until `newFileName` does not match an existing file.
 	- The new CSV file is opened in `write` mode, and `tHist` and `vHist` are written in their own rows (one row each) to it.
 	
