@@ -45,4 +45,22 @@ When the stop key "q" is pressed on the user's keyboard, plotting stops and the 
 	- The loop begins with an `if` statement to check if the current time value (passed with the current voltage value from the Arduino via SPI) has exceeded the current `timeFrame`. If it has, the figure needs to be updated
 	so that it displays the most recent 5-second window of time. To update the window, the `if` block determines how many time values are in the oldest second of time and removes that number of values from `times` and `voltage` while
 	storing those values to `tHist` and `vHist`. `xmin` and `xmax` are incremented for the active plot, `timeFrame` is incremented by 1, and the active plot is cleared so that the oldest second of time is removed from it.
-	- The `if` block exits and the loop continues at the point where it would have started if the currect window of time is within 5 seconds.
+	The `if` block exits and the loop continues at the point where it would have started if the currect window of time is within `testTime` seconds.
+	- After the `if` adjustments, the current voltage and time values are read from the Arduino through the serial connection, decoded, and assigned to `currentVoltage` and `currentTime` variables that are appended to the `voltage` and `times` lists.
+	`currentTime` is rounded before doing do.
+	- The x- and y-axis limits are assigned (in case x changed during the `if` block or y was initialized to another value) and a plot is drawn using the values in `times` for the x-axis and `voltage` for the y-axis.
+	- The keyboard is checked to see if the stop key "q" is pressed. If it is, the figure is cleared, the active plot is closed, and the `while` loop is exited. If it is not, the updated plot is shown and paused briefly to allow updating in
+	the next iteration of the loop. **If the plot is paused for a significant amount of time, the stop key sequence will not work as it will interrupt the plotting process while the plot is paused**. I chose 1 ms pause time.
+	
+5. Close serial communications and save session data
+	- When the stop key is pressed and the `while` loop exits, the communication port is closed and the values of `times` and `voltage` are appended to the end of `tHist` and `vHist`, respectively.
+	
+6. Create a CSV file and save time, voltage data
+	- `fileIndex` is initialized to `1`, used to interate the name of successive files if the current file (ex output1) exists in the directory already. `newFileName` is created as `testOutput[FILEINDEX}.csv`. If `newFileName`
+	matches a file in the current working directory (i.e. the file already exists), `fileIndex` is incremented by 1 and the file is renamed using it. The cycle repeats until `newFileName` does not match an existing file.
+	- The new CSV file is opened in `write` mode, and `tHist` and `vHist` are written in their own rows (one row each) to it.
+	
+7. Create and save an image of plot (entire session's data)
+	- A new figure is initialized with revised x limits. The x limits are `0,tHist[-1]` to get all time values for the entire session. The y limits and axis labels are unchanged.
+	- `tHist` and `vHist` (contain data for the entire session) are used to create a plot
+	- The same process for checking file names is duplicated after resetting `fileIndex` to `1`. Files are saved as jpeg images with the name `testOutputPlot[FILEINDEX].jpeg`.
