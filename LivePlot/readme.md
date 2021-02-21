@@ -1,5 +1,7 @@
 # Live Plot
 
+*THIS PROGRAM HAS ONLY WORKED ON AN ARDUINO UNO R3 SO FAR*
+
 ## Program Summary
 
 This Python program is designed to pull real-time sensor data via SPI over a shared COM port with an Arduino board to which the desired sensor is connected.
