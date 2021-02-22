@@ -12,19 +12,19 @@ maxLength=int(testTime/timeStep) #max to keep only 5 seconds of time visible on 
 xmin=0 #limiting x axis
 xmax=testTime
 ymin=0
-ymax=5
+ymax=3.5
 stopPlot=False
 
 times=[] #empty array for saving timestamps
-voltagesR=[] #empty array for saving voltages outputs
-voltagesL=[]
+voltages0, voltages1, voltages2, voltages3, voltages4 = [], [], [], [], [] #empty arrays for saving voltages outputs
+voltages5, voltages6, voltages7, voltages8, voltages9 = [], [], [], [], []
 
 plt.ion()
 fig=plt.figure()
 plt.xlabel('Time (s)')
 plt.ylabel("Voltage (V)")
 
-port=serial.Serial('COM5',9600) #change to match your system
+port=serial.Serial('COM5',115200) #change to match your system
 port.close() #close to prevent errors in measurement
 port.open()
 
@@ -32,12 +32,28 @@ port.open()
 
 while (stopPlot==False): #quit when q key is pressed
 
-    currentVoltageR=float(port.readline().decode()) #first line in arduino is voltage
-    currentVoltageL=float(port.readline().decode())
-    currentTime=float(port.readline().decode()) #time follows voltage in arduino program
+    currentVoltage0=float(port.readline().decode()) #first line in arduino is voltage
+    currentVoltage1=float(port.readline().decode())
+    currentVoltage2=float(port.readline().decode())
+    currentVoltage3=float(port.readline().decode())
+    currentVoltage4=float(port.readline().decode())
+    currentVoltage5=float(port.readline().decode())
+    currentVoltage6=float(port.readline().decode())
+    currentVoltage7=float(port.readline().decode())
+    currentVoltage8=float(port.readline().decode())
+    currentVoltage9=float(port.readline().decode())
+    currentTime=float(port.readline().decode()) #time follows voltages in arduino program
     times.append(round(currentTime,2))
-    voltagesR.append(currentVoltageR)
-    voltagesL.append(currentVoltageL)
+    voltages0.append(currentVoltage0)
+    voltages1.append(currentVoltage1)
+    voltages2.append(currentVoltage2)
+    voltages3.append(currentVoltage3)
+    voltages4.append(currentVoltage4)
+    voltages5.append(currentVoltage5)
+    voltages6.append(currentVoltage6)
+    voltages7.append(currentVoltage7)
+    voltages8.append(currentVoltage8)
+    voltages9.append(currentVoltage9)
 
     if key.is_pressed('q'): #stopkey pressed, exit loop
         stopPlot=True
@@ -57,10 +73,26 @@ with open(newFileName,'w') as newFile:
     writer=csv.writer(newFile,quoting=csv.QUOTE_NONE)
     writer.writerow(["Times"])
     writer.writerow(times)
-    writer.writerow(["R Voltages"])
-    writer.writerow(voltagesR)
-    writer.writerow(["L Voltages"])
-    writer.writerow(voltagesL)
+    writer.writerow(["FSR0 Voltages"])
+    writer.writerow(voltages0)
+    writer.writerow(["FSR1 Voltages"])
+    writer.writerow(voltages1)
+    writer.writerow(["FSR2 Voltages"])
+    writer.writerow(voltages2)
+    writer.writerow(["FSR3 Voltages"])
+    writer.writerow(voltages3)
+    writer.writerow(["FSR4 Voltages"])
+    writer.writerow(voltages4)
+    writer.writerow(["FSR5 Voltages"])
+    writer.writerow(voltages5)
+    writer.writerow(["FSR6 Voltages"])
+    writer.writerow(voltages6)
+    writer.writerow(["FSR7 Voltages"])
+    writer.writerow(voltages7)
+    writer.writerow(["FSR8 Voltages"])
+    writer.writerow(voltages8)
+    writer.writerow(["FSR9 Voltages"])
+    writer.writerow(voltages9)
 
 #CREATE, NAME, AND SAVE FIGURE FROM SESSION
 
@@ -69,8 +101,16 @@ plt.xlim(0,times[-1]) #final recorded time value is max
 plt.ylim(ymin,ymax)
 plt.xlabel('Time (s)')
 plt.ylabel("Voltage (V)")
-plt.plot(times,voltagesR,'m-', label='Photoresistor R')
-plt.plot(times,voltagesL,'b-', label='Photoresistor L')
+plt.plot(times,voltages0, color='red',linestyle='solid', label='FSR0')
+plt.plot(times,voltages1, color='pink',linestyle='solid', label='FSR1')
+plt.plot(times,voltages2, color='orange',linestyle='solid', label='FSR2')
+plt.plot(times,voltages3, color='yellow',linestyle='solid', label='FSR3')
+plt.plot(times,voltages4, color='green',linestyle='solid', label='FSR4')
+plt.plot(times,voltages5, color='lime',linestyle='solid', label='FSR5')
+plt.plot(times,voltages6, color='blue',linestyle='solid', label='FSR6')
+plt.plot(times,voltages7, color='cyan',linestyle='solid', label='FSR7')
+plt.plot(times,voltages8, color='purple',linestyle='solid', label='FSR8')
+plt.plot(times,voltages9, color='black',linestyle='solid', label='FSR9')
 plt.legend()
 
 fileIndex=1
