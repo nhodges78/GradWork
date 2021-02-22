@@ -12,7 +12,7 @@ maxLength=int(testTime/timeStep) #max to keep only 5 seconds of time visible on 
 xmin=0 #limiting x axis
 xmax=testTime
 ymin=0
-ymax=3.5
+ymax=5 #default max
 stopPlot=False
 
 times=[] #empty array for saving timestamps
@@ -98,6 +98,14 @@ with open(newFileName,'w') as newFile:
 
 plt.figure()
 plt.xlim(0,times[-1]) #final recorded time value is max
+max0,max1=max(voltages0),max(voltages1)
+max2,max3=max(voltages2),max(voltages3)
+max4,max5=max(voltages4),max(voltages5)
+max6,max7=max(voltages6),max(voltages7)
+max8,max9=max(voltages8),max(voltages9)
+newMax=max(max0,max1,max2,max3,max4,max5,max6,max7,max8,max9)
+if(newMax!=ymax): #adjust vertical axis scale to fit the graph better
+    ymax=newMax*1.1 #small amount of overhead for graph
 plt.ylim(ymin,ymax)
 plt.xlabel('Time (s)')
 plt.ylabel("Voltage (V)")
@@ -109,9 +117,9 @@ plt.plot(times,voltages4, color='green',linestyle='solid', label='FSR4')
 plt.plot(times,voltages5, color='lime',linestyle='solid', label='FSR5')
 plt.plot(times,voltages6, color='blue',linestyle='solid', label='FSR6')
 plt.plot(times,voltages7, color='cyan',linestyle='solid', label='FSR7')
-plt.plot(times,voltages8, color='purple',linestyle='solid', label='FSR8')
-plt.plot(times,voltages9, color='black',linestyle='solid', label='FSR9')
-plt.legend()
+plt.plot(times,voltages8, color='black',linestyle='solid', label='FSR8')
+plt.plot(times,voltages9, color='purple',linestyle='solid', label='FSR9')
+plt.legend(loc='upper center', ncol=5, bbox_to_anchor=(0.5,1.15))
 
 fileIndex=1
 newFileName='testOutputPlot'+str(fileIndex)+'.jpeg'
