@@ -4,6 +4,7 @@ import csv
 import os
 import keyboard as key
 
+comPort='COM5' #match with port Arduino board is using
 timeStep=0.1 #match arduino delay ms
 testTime=5 #how many seconds to run the experiment
 currentTime=0.0 #for x axis
@@ -24,7 +25,7 @@ fig=plt.figure()
 plt.xlabel('Time (s)')
 plt.ylabel("Voltage (V)")
 
-port=serial.Serial('COM6',9600)
+port=serial.Serial(comPort,9600)
 
 port.close() #close to prevent errors in measurement
 port.open()

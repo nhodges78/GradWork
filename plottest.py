@@ -4,6 +4,7 @@ import csv
 import os
 import keyboard as key
 
+comPort='COM5' #match with port Arduino board is using
 timeStep=0.1 #match arduino delay ms
 testTime=5 #how many seconds to run the experiment
 currentTime=0.0 #for x axis
@@ -13,36 +14,57 @@ xmin=0 #limiting x axis
 xmax=testTime
 ymin=0
 ymax=5
-stopPlot=False
 
 times=[] #empty array for saving timestamps
-voltagesR=[] #empty array for saving voltages outputs
-voltagesL=[]
+voltage=[] #empty array for saving voltage outputs
+tHist=[] #track all time values
+vHist=[] #track all voltage values
 
 plt.ion()
 fig=plt.figure()
 plt.xlabel('Time (s)')
 plt.ylabel("Voltage (V)")
 
-port=serial.Serial('COM5',9600) #change to match your system
+port=serial.Serial(comPort,9600)
+
 port.close() #close to prevent errors in measurement
 port.open()
 
 #import data from Arduino to plot
 
-while (stopPlot==False): #quit when q key is pressed
+while True: #quit when q key is pressed
 
-    currentVoltageR=float(port.readline().decode()) #first line in arduino is voltage
-    currentVoltageL=float(port.readline().decode())
+    if int(currentTime)>timeFrame:
+        i=int(1/timeStep) #remove all items from oldest second of time
+        tHist.extend(times[0:i])
+        del times[0:i]
+        vHist.extend(voltage[0:i])
+        del voltage[0:i]
+        xmin+=1
+        xmax+=1
+        plt.clf() #refresh figure
+        timeFrame+=1 #add another second to the timeframe
+
+    currentVoltage=float(port.readline().decode()) #first line in arduino is voltage
     currentTime=float(port.readline().decode()) #time follows voltage in arduino program
     times.append(round(currentTime,2))
-    voltagesR.append(currentVoltageR)
-    voltagesL.append(currentVoltageL)
+    voltage.append(currentVoltage)
+    
+    plt.xlim(xmin,xmax)
+    plt.ylim(ymin,ymax)
+    plt.plot(times,voltage,'m-')
 
+    plt.show()
+    plt.pause(.001) #update plot
+    
     if key.is_pressed('q'): #stopkey pressed, exit loop
-        stopPlot=True
+        plt.clf()
+        plt.close()
 
 port.close()
+
+tHist.extend(times)
+vHist.extend(voltage)
 
 #NAME AND SAVE THE CSV FILE
 
@@ -56,22 +78,18 @@ if os.path.isfile(newFileName)==True: #fileExists, change name via incrementing 
 with open(newFileName,'w') as newFile:
     writer=csv.writer(newFile,quoting=csv.QUOTE_NONE)
     writer.writerow(["Times"])
-    writer.writerow(times)
-    writer.writerow(["R Voltages"])
-    writer.writerow(voltagesR)
-    writer.writerow(["L Voltages"])
-    writer.writerow(voltagesL)
+    writer.writerow(tHist)
+    writer.writerow(["Voltages"])
+    writer.writerow(vHist)
 
 #CREATE, NAME, AND SAVE FIGURE FROM SESSION
 
 plt.figure()
-plt.xlim(0,times[-1]) #final recorded time value is max
+plt.xlim(0,tHist[-1]) #final recorded time value is max
 plt.ylim(ymin,ymax)
 plt.xlabel('Time (s)')
 plt.ylabel("Voltage (V)")
-plt.plot(times,voltagesR,'m-', label='Photoresistor R')
-plt.plot(times,voltagesL,'b-', label='Photoresistor L')
-plt.legend()
+plt.plot(tHist,vHist,'m-')
 
 fileIndex=1
 newFileName='testOutputPlot'+str(fileIndex)+'.jpeg'
