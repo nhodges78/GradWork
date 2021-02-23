@@ -4,15 +4,10 @@ import csv
 import os
 import keyboard as key
 
-timeStep=0.1 #match arduino delay ms
-testTime=5 #how many seconds to run the experiment
 currentTime=0.0 #for x axis
-timeFrame=testTime #for adjusting time window on plot
-maxLength=int(testTime/timeStep) #max to keep only 5 seconds of time visible on plot
 xmin=0 #limiting x axis
-xmax=testTime
 ymin=0
-ymax=5 #default max
+ymax=3.3 #default max
 stopPlot=False
 
 times=[] #empty array for saving timestamps
